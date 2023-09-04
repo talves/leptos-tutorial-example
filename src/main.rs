@@ -10,7 +10,7 @@ fn App(cx: Scope) -> impl IntoView {
 
     view! { cx,
         <p>
-        <h1>Hello Leptos Counter!</h1>
+        <h1 class=("red", move || count() % 2 == 1)>Hello Leptos Counter!</h1>
         <button
             on:click=move |_| {
                 // let mut counter = count.get();
