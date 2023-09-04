@@ -7,7 +7,6 @@ fn main() {
 #[component]
 fn App(cx: Scope) -> impl IntoView {
     let (count, set_count) = create_signal(cx, 0);
-    let double_count = move || count() * 2;
 
     view! { cx,
         <p>
@@ -24,6 +23,16 @@ fn App(cx: Scope) -> impl IntoView {
             "Click me: "
             {count}
         </button>
+        <ProgressBar progress=count/>
+        </p>
+    }
+}
+
+#[component]
+fn ProgressBar(cx: Scope, progress: ReadSignal<i32>) -> impl IntoView {
+    let double_count = move || progress() * 2;
+
+    view! { cx,
         <div style:padding-top="20px">
             <progress
                 max="100"
@@ -34,6 +43,5 @@ fn App(cx: Scope) -> impl IntoView {
                 {double_count}
             </span>
         </div>
-        </p>
     }
 }
