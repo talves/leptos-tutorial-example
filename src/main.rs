@@ -7,6 +7,7 @@ fn main() {
 #[component]
 fn App(cx: Scope) -> impl IntoView {
     let (count, set_count) = create_signal(cx, 0);
+    let double_count = move || count() * 2;
 
     view! { cx,
         <p>
@@ -23,6 +24,16 @@ fn App(cx: Scope) -> impl IntoView {
             "Click me: "
             {count}
         </button>
+        <div style:padding-top="20px">
+            <progress
+                max="100"
+                // signals are functions, so this <=> `move || count.get()`
+                value=double_count
+            />
+            <span style:padding-left="20px">
+                {double_count}
+            </span>
+        </div>
         </p>
     }
 }
