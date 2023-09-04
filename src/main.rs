@@ -30,6 +30,10 @@ fn App(cx: Scope) -> impl IntoView {
         <ProgressBar max=50 progress=Signal::derive(cx, double_count)/>
         </p>
 
+        <TakesChildren render_prop=|| view! { cx, <p>"Hi, there!"</p>} >
+            <ProgressBar max=200 progress=Signal::derive(cx, double_count)/>
+        </TakesChildren>
+
         <h2>"Iteration"</h2>
         <h2>"Static List"</h2>
         <p>"Use this pattern if the list itself is static."</p>
@@ -273,5 +277,27 @@ fn UncontrolledComponent(cx: Scope) -> impl IntoView {
             <input type="submit" value="Submit"/>
         </form>
         <p>"Name is: " {name}</p>
+    }
+}
+
+#[component]
+pub fn TakesChildren<F, IV>(
+    cx: Scope,
+    /// Takes a function (type F) that returns anything that can be
+    /// converted into a View (type IV)
+    render_prop: F,
+    /// `children` takes the `Children` type
+    children: Children,
+) -> impl IntoView
+where
+    F: Fn() -> IV,
+    IV: IntoView,
+{
+    view! { cx,
+        <h2>"Render Prop"</h2>
+        {render_prop()}
+
+        <h2>"Children"</h2>
+        {children(cx)}
     }
 }
