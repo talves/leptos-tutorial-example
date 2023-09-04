@@ -7,6 +7,7 @@ fn main() {
 #[component]
 fn App(cx: Scope) -> impl IntoView {
     let (count, set_count) = create_signal(cx, 0);
+    let double_count = move || count() * 2;
 
     view! { cx,
         <p>
@@ -23,24 +24,35 @@ fn App(cx: Scope) -> impl IntoView {
             "Click me: "
             {count}
         </button>
-        <ProgressBar progress=count/>
+        <ProgressBar progress=count max=100/>
+        // Signal::derive creates a Signal wrapper from our derived signal
+        // using double_count means it should move twice as fast
+        <ProgressBar max=50 progress=Signal::derive(cx, double_count)/>
         </p>
     }
 }
 
+// Shows a progress bar using your max (optional) and progress
 #[component]
-fn ProgressBar(cx: Scope, progress: ReadSignal<i32>) -> impl IntoView {
-    let double_count = move || progress() * 2;
-
+fn ProgressBar(
+    cx: Scope,
+    /// How much progress should be displayed.
+    #[prop(into)]
+    // `Signal<T>` is a wrapper for several reactive types.
+    // It can be helpful in component APIs like this, where we
+    // might want to take any kind of reactive value
+    progress: Signal<i32>,
+    #[prop(default = 100)] max: u16,
+) -> impl IntoView {
     view! { cx,
         <div style:padding-top="20px">
             <progress
-                max="100"
+                max=max
                 // signals are functions, so this <=> `move || count.get()`
-                value=double_count
+                value=progress
             />
             <span style:padding-left="20px">
-                {double_count}
+                {progress}
             </span>
         </div>
     }
