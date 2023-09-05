@@ -1,5 +1,11 @@
 use leptos::{ev::SubmitEvent, *};
 
+#[derive(Default, Clone, Debug)]
+struct GlobalState {
+    count: u32,
+    name: String,
+}
+
 fn main() {
     leptos::mount_to_body(|cx| view! { cx, <App/> })
 }
@@ -8,6 +14,10 @@ fn main() {
 fn App(cx: Scope) -> impl IntoView {
     let (count, set_count) = create_signal(cx, 0);
     let double_count = move || count() * 2;
+    // we'll provide a single signal that holds the whole state
+    // each component will be responsible for creating its own "lens" into it
+    let state = create_rw_signal(cx, GlobalState::default());
+    provide_context(cx, state);
 
     view! { cx,
         <p>
@@ -46,6 +56,12 @@ fn App(cx: Scope) -> impl IntoView {
         <ControlledComponent/>
         <h2>"Uncontrolled Component"</h2>
         <UncontrolledComponent/>
+
+        <h2>"Global State"</h2>
+        <div style="display: flex;padding: 20px;">
+            <GlobalStateCounter/>
+            <GlobalStateInput/>
+        </div>
     }
 }
 
@@ -299,5 +315,69 @@ where
 
         <h2>"Children"</h2>
         {children(cx)}
+    }
+}
+
+/// A component that updates the count in the global state.
+#[component]
+fn GlobalStateCounter(cx: Scope) -> impl IntoView {
+    let state = expect_context::<RwSignal<GlobalState>>(cx);
+
+    // `create_slice` lets us create a "lens" into the data
+    let (count, set_count) = create_slice(
+        cx,
+        // we take a slice *from* `state`
+        state,
+        // our getter returns a "slice" of the data
+        |state| state.count,
+        // our setter describes how to mutate that slice, given a new value
+        |state, n| state.count = n,
+    );
+
+    view! { cx,
+        <div class="consumer blue">
+            <button
+                on:click=move |_| {
+                    set_count(count() + 1);
+                }
+            >
+                "Increment Global Count"
+            </button>
+            <br/>
+            <span>"Count is: " {count}</span>
+        </div>
+    }
+}
+
+/// A component that updates the count in the global state.
+#[component]
+fn GlobalStateInput(cx: Scope) -> impl IntoView {
+    let state = use_context::<RwSignal<GlobalState>>(cx).expect("state to have been provided");
+
+    // this slice is completely independent of the `count` slice
+    // that we created in the other component
+    // neither of them will cause the other to rerun
+    let (name, set_name) = create_slice(
+        cx,
+        // we take a slice *from* `state`
+        state,
+        // our getter returns a "slice" of the data
+        |state| state.name.clone(),
+        // our setter describes how to mutate that slice, given a new value
+        |state, n| state.name = n,
+    );
+
+    view! { cx,
+        <div class="consumer green">
+            <input
+                type="text"
+                prop:value=name
+                on:input=move |ev| {
+                    set_name(event_target_value(&ev));
+                }
+            />
+            <br/>
+            <span>"Name is: " {name}</span>
+        </div>
     }
 }
