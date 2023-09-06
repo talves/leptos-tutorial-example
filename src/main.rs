@@ -1,5 +1,7 @@
 use leptos::{ev::SubmitEvent, *};
 
+/* trunk serve --open */
+
 #[derive(Default, Clone, Debug)]
 struct GlobalState {
     count: u32,
