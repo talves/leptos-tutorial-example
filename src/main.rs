@@ -1,8 +1,6 @@
 use leptos::{ev::SubmitEvent, *};
 use leptos_meta::*;
 
-/* trunk serve --open */
-
 #[derive(Default, Clone, Debug)]
 struct GlobalState {
     count: u32,

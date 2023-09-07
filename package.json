@@ -6,7 +6,7 @@
     "tw": "tailwindcss -i style/input.css -o style/output.css",
     "tw:dev": "tailwindcss -i style/input.css -o style/output.css --watch",
     "tw:release": "tailwindcss -i style/input.css -o style/output.css --minify",
-    "dev": "cargo leptos watch"
+    "dev": "trunk serve --open"
   },
   "repository": "git@github.com:talves/leptos-tutorial-example.git",
   "author": "talves <tony@3alves.com>",
