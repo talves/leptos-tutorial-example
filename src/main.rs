@@ -1,4 +1,5 @@
 use leptos::{ev::SubmitEvent, *};
+use leptos_meta::Link;
 
 /* trunk serve --open */
 
@@ -22,8 +23,10 @@ fn App(cx: Scope) -> impl IntoView {
     provide_context(cx, state);
 
     view! { cx,
+        <script src="https://cdn.tailwindcss.com"></script>
+        <Link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         <p>
-        <h1 class=("red", move || count() % 2 == 1)>Hello Leptos Counter!</h1>
+        <h1 class:red=(move || count() % 2 == 1) class=("text-4xl", true) class=("text-blue-900/75", true)>Hello Leptos Counter!</h1>
         <button
             on:click=move |_| {
                 // let mut counter = count.get();
