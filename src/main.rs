@@ -1,5 +1,5 @@
 use leptos::{ev::SubmitEvent, *};
-use leptos_meta::Link;
+use leptos_meta::*;
 
 /* trunk serve --open */
 
@@ -15,16 +15,16 @@ fn main() {
 
 #[component]
 fn App(cx: Scope) -> impl IntoView {
-    let (count, set_count) = create_signal(cx, 0);
-    let double_count = move || count() * 2;
     // we'll provide a single signal that holds the whole state
     // each component will be responsible for creating its own "lens" into it
     let state = create_rw_signal(cx, GlobalState::default());
     provide_context(cx, state);
+    provide_meta_context(cx);
+
+    let (count, set_count) = create_signal(cx, 0);
+    let double_count = move || count() * 2;
 
     view! { cx,
-        <script src="https://cdn.tailwindcss.com"></script>
-        <Link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         <p>
         <h1 class:red=(move || count() % 2 == 1) class=("text-4xl", true) class=("text-blue-900/75", true)>Hello Leptos Counter!</h1>
         <button

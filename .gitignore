@@ -1,3 +1,6 @@
 /node_modules
 /target
 /dist
+
+# css style output (tailwind)
+/style/output.css

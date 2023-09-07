@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "main": "index.html",
   "scripts": {
-    "tw:dev": "tailwindcss -i ./style/input.css -o ./dist/output.css --watch",
-    "tw": "tailwindcss -i ./style/input.css -o ./dist/output.css --minify",
+    "tw:dev": "tailwindcss -i style/input.css -o style/output.css --watch",
+    "tw": "tailwindcss -i style/input.css -o style/output.css --minify",
     "dev": "cargo leptos watch"
   },
   "repository": "git@github.com:talves/leptos-tutorial-example.git",
